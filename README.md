@@ -100,6 +100,12 @@ Inspection records may contain location or operational details. Collect only nec
 
 The repository currently contains the project brief and MIT license only. There is no installable application, verified offline workflow, backend endpoint, or synchronization implementation yet.
 
+## Author & Development
+
+**Project author and solo developer:** [Nurul Faiyaz](https://github.com/tracolerd).
+
+This project is independently developed and maintained by Nurul Faiyaz. AI-assisted tools may be used as part of the development workflow; the project author remains responsible for technical decisions, code review, validation, and maintenance.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
