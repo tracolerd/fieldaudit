@@ -1,6 +1,9 @@
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:15182D,50:4F46E5,100:0B1220&height=190&section=header&text=FieldAudit&fontSize=42&fontColor=F1F5F9&fontAlignY=38&animation=fadeIn&desc=Planned%20offline-first%20Android%20inspections%20and%20resilient%20synchronization&descAlignY=61&descSize=15" alt="FieldAudit animated project banner" width="100%" />
 </p>
+<h1 align="center">FieldAudit</h1>
+<p align="center"><img src="https://img.shields.io/badge/Stage-Planning-8B5CF6" alt="Planning stage" /></p>
+
 
 **A native Android inspection workflow that remains useful without a network connection.**
 
