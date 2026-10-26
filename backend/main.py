@@ -1,54 +1,83 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
+
 from backend.schemas import InspectionSyncRequest, InspectionSyncResponse
+
 app = FastAPI(title="FieldAudit Backend", version="1.0.0")
-# In-memory store representing persistent server DB with revision tracking
-# Key: inspection UUID, Value: dict containing fields and server_version
-server_inspection_store = {}
+
+# In-memory store representing persistent server DB with revision tracking.
+# NOTE: This remains prototype-only; data is lost when the process restarts.
+# Key: inspection UUID, value: inspection fields and server_version.
+server_inspection_store: dict[str, dict[str, object]] = {}
+
+
 @app.get("/")
-def read_root():
-    return {"status": "FieldAudit Backend is running with Idempotency & Revision Support"}
+def read_root() -> dict[str, str]:
+    return {
+        "status": "FieldAudit Backend is running with Idempotency & Revision Support"
+    }
+
+
 @app.post("/api/v1/inspections/sync", response_model=InspectionSyncResponse)
-def sync_inspection(payload: InspectionSyncRequest):
+def sync_inspection(
+    payload: InspectionSyncRequest,
+) -> InspectionSyncResponse:
     """
-    Idempotent sync endpoint:
-    - Uses client-provided UUID as primary lookup.
-    - Tracks server_version (revision) to prevent silent data overwrites.
-    - Returns 409 Conflict if client local_version is strictly less than server version.
+    Prototype sync endpoint.
+
+    Uses a client-provided identifier and a revision counter. This in-memory
+    implementation is not a production-ready idempotency or concurrency
+    protocol; durable persistence and proper optimistic concurrency remain
+    separate follow-up work.
     """
     existing_record = server_inspection_store.get(payload.id)
+
     if existing_record:
-        server_version = existing_record["server_version"]
-        # Conflict detection: Client is trying to sync an obsolete revision
+        server_version = int(existing_record["server_version"])
+
+        # Conflict detection: an older local revision cannot overwrite a newer
+        # server revision. This is a prototype rule, not a full base-revision
+        # protocol.
         if payload.local_version < server_version:
             raise HTTPException(
-                status_code=409, 
-                detail=f"Conflict detected. Server revision is {server_version}, but local version is {payload.local_version}."
+                status_code=409,
+                detail=(
+                    f"Conflict detected. Server revision is {server_version}, "
+                    f"but local version is {payload.local_version}."
+                ),
             )
-        # Idempotent update: If client version matches or is ahead, accept and increment server version
+
+        # Preserve the existing prototype behavior pending the dedicated
+        # idempotency/concurrency fix.
         existing_record["title"] = payload.title
         existing_record["status"] = payload.status
         existing_record["server_version"] = server_version + 1
     else:
-        # First-time sync for this UUID (Idempotent insert)
         server_inspection_store[payload.id] = {
             "id": payload.id,
             "title": payload.title,
             "status": payload.status,
-            "server_version": 1
+            "server_version": 1,
         }
+
     saved = server_inspection_store[payload.id]
     return InspectionSyncResponse(
-        id=saved["id"],
-        title=saved["title"],
+        id=str(saved["id"]),
+        title=str(saved["title"]),
         status="SYNCED",
-        server_version=saved["server_version"],
-        message="Idempotent sync successful with revision tracking."
-    )from fastapi import UploadFile, File
+        server_version=int(saved["server_version"]),
+        message="Idempotent sync successful with revision tracking.",
+    )
+
+
 @app.post("/api/v1/inspections/{inspection_id}/attachment")
-async def upload_attachment(inspection_id: str, file: UploadFile = File(...)):
-    # Save or process uploaded evidence file
+async def upload_attachment(
+    inspection_id: str,
+    file: UploadFile = File(...),
+) -> dict[str, str | None]:
+    # Attachment persistence and validation are not implemented yet. Do not
+    # treat this scaffold response as proof that file bytes were stored.
     return {
         "inspection_id": inspection_id,
         "filename": file.filename,
-        "status": "UPLOADED"
+        "status": "NOT_PERSISTED",
     }
