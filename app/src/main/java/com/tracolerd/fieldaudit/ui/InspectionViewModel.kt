@@ -35,4 +35,12 @@ class InspectionViewModel(application: Application) : AndroidViewModel(applicati
             repository.insert(newInspection)
         }
     }
+    // Phase 7: Explicit Conflict Resolution Action
+    fun resolveConflict(inspection: InspectionEntity, choice: String) {
+        viewModelScope.launch {
+            // choice can be "KEEP_LOCAL" or "KEEP_SERVER"
+            val updatedStatus = if (choice == "KEEP_LOCAL") "PENDING_SYNC" else "SYNCED"
+            repository.updateStatus(inspection.id, updatedStatus)
+        }
+    }
 }
