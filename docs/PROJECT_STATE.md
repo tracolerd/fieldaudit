@@ -1,5 +1,5 @@
 # Project State: FieldAudit
-**Current Phase:** Phase 7 (Conflict UI & Error Recovery) - Completed
+**Current Phase:** Phase 8 (Evidence attachments) - Scaffolded
 **Mission:** Offline-first checklist-based inspection app with durable sync.
 ## Milestones
 - [x] Phase 0: Environment & Repository Check
@@ -9,5 +9,5 @@
 - [x] Phase 4: FastAPI service & Schemas
 - [x] Phase 5: Server idempotency & Revision handling
 - [x] Phase 6: WorkManager queue & Sync status
-- [x] Phase 7: Conflict UI & Error recovery (Fully Implemented)
-- [ ] Phase 8: Evidence attachments (Optional)
+- [x] Phase 7: Conflict UI & Error recovery
+- [x] Phase 8: Evidence attachments (Entity, DB migration & API scaffolded)

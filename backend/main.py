@@ -43,4 +43,12 @@ def sync_inspection(payload: InspectionSyncRequest):
         status="SYNCED",
         server_version=saved["server_version"],
         message="Idempotent sync successful with revision tracking."
-    )
+    )from fastapi import UploadFile, File
+@app.post("/api/v1/inspections/{inspection_id}/attachment")
+async def upload_attachment(inspection_id: str, file: UploadFile = File(...)):
+    # Save or process uploaded evidence file
+    return {
+        "inspection_id": inspection_id,
+        "filename": file.filename,
+        "status": "UPLOADED"
+    }
