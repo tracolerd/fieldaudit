@@ -23,11 +23,11 @@ The intended product helps field teams record inspections when connectivity is u
 |---|---|---|
 | Android application | Kotlin, Jetpack Compose, basic inspection screen | Creates titled drafts; no complete checklist or inspection lifecycle yet |
 | Local persistence | Room database, inspection entity, DAO, repository, Flow-based list | Destructive fallback migrations are enabled and schema export is disabled; upgrade safety is unproven |
-| Background sync | WorkManager worker scaffold and Ktor dependencies | Worker does not read pending records or make requests; it returns success immediately |
+| Background sync | WorkManager, Room pending queue, Ktor client and status policy | Sync now sends pending drafts, retries network/5xx failures and marks HTTP 409 conflicts; durable server storage/authentication remain incomplete |
 | API contract | Pydantic models and FastAPI sync route scaffold | Backend source does not currently parse and is not production-safe |
 | Revision/conflict handling | Initial server-version fields and a 409 branch | Version comparison is not a sound optimistic-concurrency protocol; repeated same-ID requests increment revisions instead of being idempotent |
 | Evidence attachments | Room entity and upload route scaffold | Endpoint does not store uploaded bytes but can return UPLOADED |
-| Automated checks | Gradle wrapper and project build files | No test suite or GitHub Actions workflow is present in the current repository tree |
+| Automated checks | GitHub Actions Android build + unit tests; backend pytest workflow | Android CI verifies compilation/unit tests, but emulator-backed end-to-end synchronization is not yet exercised |
 
 The phase checklist in [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md) is not proof that every phase is functionally complete. Several items are scaffolds only; the checklist must be reconciled with executable behavior and tests.
 
@@ -126,3 +126,16 @@ MIT. See [LICENSE](LICENSE).
   <a href="mailto:scrollfaiyaz@gmail.com">Email</a> ·
   <a href="https://nurul-faiyaz.netlify.app/">Website</a>
 </p>
+
+
+## Local Android synchronization
+
+The Android worker now sends records in `PENDING_SYNC` to `/api/v1/inspections/sync` when a network is available. For an Android emulator with the FastAPI backend running on the development host, the debug build defaults to `http://10.0.2.2:8000`. Plain HTTP is permitted only through the debug manifest overlay; the release manifest does not enable cleartext traffic.
+
+Configure a real HTTPS API origin for a release build with:
+
+```powershell
+./gradlew assembleRelease -PfieldAuditApiBaseUrl=https://your-api.example
+```
+
+The current backend stores records in process memory and does not have authentication, so do not expose it to real inspection data or an untrusted network. HTTP 409 responses are marked `CONFLICT`; the app does not yet fetch a server snapshot to offer full merge resolution.
