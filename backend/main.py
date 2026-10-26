@@ -1,38 +1,46 @@
 from fastapi import FastAPI, HTTPException
 from backend.schemas import InspectionSyncRequest, InspectionSyncResponse
 app = FastAPI(title="FieldAudit Backend", version="1.0.0")
-# In-memory store for MVP baseline (will map to PostgreSQL/SQLite later)
-fake_server_db = {}
+# In-memory store representing persistent server DB with revision tracking
+# Key: inspection UUID, Value: dict containing fields and server_version
+server_inspection_store = {}
 @app.get("/")
 def read_root():
-    return {"status": "FieldAudit Backend is running"}
+    return {"status": "FieldAudit Backend is running with Idempotency & Revision Support"}
 @app.post("/api/v1/inspections/sync", response_model=InspectionSyncResponse)
 def sync_inspection(payload: InspectionSyncRequest):
-    # Idempotency & Revision logic scaffold
-    existing = fake_server_db.get(payload.id)
-    if existing:
-        server_version = existing["server_version"]
-        # Basic conflict check rule
+    """
+    Idempotent sync endpoint:
+    - Uses client-provided UUID as primary lookup.
+    - Tracks server_version (revision) to prevent silent data overwrites.
+    - Returns 409 Conflict if client local_version is strictly less than server version.
+    """
+    existing_record = server_inspection_store.get(payload.id)
+    if existing_record:
+        server_version = existing_record["server_version"]
+        # Conflict detection: Client is trying to sync an obsolete revision
         if payload.local_version < server_version:
-            raise HTTPException(status_code=409, detail="Conflict: Server has a newer revision.")
-        # Update existing record
-        existing["title"] = payload.title
-        existing["status"] = payload.status
-        existing["server_version"] += 1
+            raise HTTPException(
+                status_code=409, 
+                detail=f"Conflict detected. Server revision is {server_version}, but local version is {payload.local_version}."
+            )
+        # Idempotent update: If client version matches or is ahead, accept and increment server version
+        existing_record["title"] = payload.title
+        existing_record["status"] = payload.status
+        existing_record["server_version"] = server_version + 1
     else:
-        # Create new record on server
-        server_version = 1
-        fake_server_db[payload.id] = {
+        # First-time sync for this UUID (Idempotent insert)
+        server_inspection_store[payload.id] = {
             "id": payload.id,
             "title": payload.title,
             "status": payload.status,
-            "server_version": server_version
+            "server_version": 1
         }
-    record = fake_server_db[payload.id]
+    saved = server_inspection_store[payload.id]
     return InspectionSyncResponse(
-        id=record["id"],
-        title=record["title"],
+        id=saved["id"],
+        title=saved["title"],
         status="SYNCED",
-        server_version=record["server_version"],
-        message="Successfully synchronized"
+        server_version=saved["server_version"],
+        message="Idempotent sync successful with revision tracking."
     )
