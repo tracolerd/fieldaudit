@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="380" viewBox="0 0 1400 380" role="img" aria-labelledby="title desc">
+  <title id="title">FieldAudit — offline-first inspection workflows</title>
+  <desc id="desc">A dark indigo technical banner with a phone displaying a field inspection checklist, a queued sync indicator, and a server status card.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#090D1F"/>
+      <stop offset=".52" stop-color="#151B3B"/>
+      <stop offset="1" stop-color="#0B1727"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#818CF8"/>
+      <stop offset=".55" stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#2DD4BF"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1E2A4A"/>
+      <stop offset="1" stop-color="#10182D"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#4F46E5" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#4F46E5" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#8292C5" stroke-opacity=".09" stroke-width="1"/>
+    </pattern>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="14" stdDeviation="13" flood-color="#020617" flood-opacity=".45"/>
+    </filter>
+  </defs>
+  <rect width="1400" height="380" rx="22" fill="url(#bg)"/>
+  <rect width="1400" height="380" rx="22" fill="url(#grid)"/>
+  <ellipse cx="1030" cy="190" rx="430" ry="280" fill="url(#glow)"/>
+  <path d="M0 314C240 276 420 378 680 328S1120 257 1400 310V380H0Z" fill="#0B1226" fill-opacity=".42"/>
+  <path d="M0 314C240 276 420 378 680 328S1120 257 1400 310" fill="none" stroke="#5969A4" stroke-opacity=".22" stroke-width="1.5"/>
+
+  <g transform="translate(72 62)">
+    <rect x="0" y="0" width="42" height="42" rx="12" fill="#202B54" stroke="#7383E8" stroke-opacity=".65"/>
+    <path d="M12 12h13l5 5v14H12Z" fill="none" stroke="url(#accent)" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m16 20 3 3 6-7M16 27h9" fill="none" stroke="#A5F3FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="56" y="16" fill="#A5B4FC" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="3.2">FIELD OPERATIONS · MOBILE</text>
+    <text x="0" y="93" fill="#F8FAFC" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="54" font-weight="800" letter-spacing="-1.8">FieldAudit</text>
+    <text x="0" y="132" fill="#C7D2FE" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="22" font-weight="650">Capture offline. Sync deliberately.</text>
+    <text x="0" y="166" fill="#9AA9CE" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">Local inspection drafts · Retry-aware sync · Visible conflict states</text>
+    <g transform="translate(0 207)">
+      <rect width="125" height="32" rx="16" fill="#1B2949" stroke="#6476BD" stroke-opacity=".55"/>
+      <circle cx="15" cy="16" r="4" fill="#FBBF24"/>
+      <text x="27" y="20.5" fill="#DCE6FF" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="650">PROTOTYPE</text>
+      <rect x="136" width="151" height="32" rx="16" fill="#10343B" stroke="#2DD4BF" stroke-opacity=".5"/>
+      <path d="M151 12h10v9h-10zM153 9h6" fill="none" stroke="#5EEAD4" stroke-width="1.5" stroke-linejoin="round"/>
+      <text x="168" y="20.5" fill="#CCFBF1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="650">ANDROID + API</text>
+    </g>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="905" y="33" width="205" height="312" rx="29" fill="#080E20" stroke="#7282BA" stroke-opacity=".75" stroke-width="1.5"/>
+    <rect x="916" y="45" width="183" height="288" rx="20" fill="#F8FAFC"/>
+    <rect x="973" y="50" width="69" height="8" rx="4" fill="#111827"/>
+    <rect x="932" y="71" width="151" height="36" rx="10" fill="#111D3B"/>
+    <circle cx="947" cy="89" r="7" fill="#4338CA"/>
+    <path d="M944 85h6v8h-6zM945.5 87h3M945.5 89.5h3" fill="none" stroke="#E0E7FF" stroke-width="1"/>
+    <text x="961" y="87" fill="#E2E8F0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" font-weight="750" letter-spacing=".8">FIELDAUDIT</text>
+    <text x="961" y="98" fill="#9CAED9" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="7.5">FIELD INSPECTION</text>
+    <text x="932" y="128" fill="#111827" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="750">Inspection #1048</text>
+    <text x="932" y="143" fill="#64748B" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="8.5">Facility walkthrough</text>
+    <rect x="932" y="153" width="92" height="21" rx="10.5" fill="#FEF3C7"/>
+    <circle cx="943" cy="163.5" r="3" fill="#D97706"/>
+    <text x="951" y="166.5" fill="#92400E" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="8" font-weight="700">PENDING SYNC</text>
+    <g fill="none" stroke="#CBD5E1" stroke-width="1">
+      <rect x="932" y="184" width="151" height="39" rx="8" fill="#FFFFFF"/>
+      <rect x="932" y="230" width="151" height="39" rx="8" fill="#FFFFFF"/>
+      <rect x="932" y="276" width="151" height="39" rx="8" fill="#FFFFFF"/>
+    </g>
+    <g stroke="#0D9488" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="941" y="196" width="10" height="10" rx="2"/>
+      <path d="m943 201 2 2 4-5"/>
+    </g>
+    <text x="959" y="199" fill="#334155" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="8.5" font-weight="700">Safety equipment</text>
+    <text x="959" y="210" fill="#94A3B8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="7.5">Visual check saved</text>
+    <rect x="941" y="242" width="10" height="10" rx="2" fill="#FFFFFF" stroke="#94A3B8"/>
+    <text x="959" y="245" fill="#334155" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="8.5" font-weight="700">Exit signage</text>
+    <text x="959" y="256" fill="#94A3B8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="7.5">Awaiting review</text>
+    <rect x="941" y="288" width="10" height="10" rx="2" fill="#FFFFFF" stroke="#94A3B8"/>
+    <text x="959" y="291" fill="#334155" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="8.5" font-weight="700">Equipment log</text>
+    <text x="959" y="302" fill="#94A3B8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="7.5">Local draft</text>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="1160" y="87" width="178" height="75" rx="15" fill="url(#panel)" stroke="#5C6DA4" stroke-opacity=".7"/>
+    <rect x="1177" y="105" width="31" height="37" rx="6" fill="#172647" stroke="#8294D5" stroke-opacity=".65"/>
+    <path d="M1184 114h17M1184 121h17M1184 128h12" stroke="#7DD3FC" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="1192" cy="136" r="1.8" fill="#34D399"/>
+    <text x="1220" y="112" fill="#A5B4FC" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" font-weight="750" letter-spacing="1.2">API</text>
+    <text x="1220" y="129" fill="#F8FAFC" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="700">Sync endpoint</text>
+    <text x="1220" y="144" fill="#94A3B8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9">Prototype storage</text>
+  </g>
+  <g>
+    <path d="M1110 127H1142" stroke="#6478D9" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 5"/>
+    <path d="m1136 121 7 6-7 6" fill="none" stroke="#7DD3FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="1161" y="190" width="177" height="53" rx="13" fill="#102C32" stroke="#2DD4BF" stroke-opacity=".55"/>
+    <circle cx="1181" cy="216" r="8" fill="#134E4A"/>
+    <path d="M1177 216a4 4 0 0 1 7-3l2 3m-1-4v4h-4" fill="none" stroke="#5EEAD4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1197" y="211" fill="#99F6E4" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" font-weight="700" letter-spacing=".8">WORK QUEUE</text>
+    <text x="1197" y="226" fill="#D1FAE5" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10.5">Network-aware retry</text>
+    <path d="M1104 265C1130 265 1135 216 1161 216" fill="none" stroke="#38BDF8" stroke-width="1.5" stroke-opacity=".6" stroke-dasharray="4 5"/>
+  </g>
+  <text x="1362" y="356" text-anchor="end" fill="#60739F" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" letter-spacing="1.5">LOCAL-FIRST · AUDITABLE · IN PROGRESS</text>
+</svg>
