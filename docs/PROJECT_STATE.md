@@ -1,10 +1,10 @@
 # Project State: FieldAudit
-**Current Phase:** Phase 2 (Room Entities, DAO & Repository)
+**Current Phase:** Phase 3 (Offline Inspection UI & Drafts)
 **Mission:** Offline-first checklist-based inspection app with durable sync.
 ## Milestones
 - [x] Phase 0: Environment & Repository Check
 - [x] Phase 1: Minimal Android app and package structure
-- [ ] Phase 2: Room entities/DAO/repository
+- [x] Phase 2: Room entities/DAO/repository
 - [ ] Phase 3: Offline inspection UI & Drafts
 - [ ] Phase 4: FastAPI service & Schemas
 - [ ] Phase 5: Server idempotency & Revision handling
