@@ -1,20 +1,20 @@
+from threading import Lock
+
 from fastapi import FastAPI, File, HTTPException, UploadFile
 
 from backend.schemas import InspectionSyncRequest, InspectionSyncResponse
 
 app = FastAPI(title="FieldAudit Backend", version="1.0.0")
 
-# In-memory store representing persistent server DB with revision tracking.
-# NOTE: This remains prototype-only; data is lost when the process restarts.
-# Key: inspection UUID, value: inspection fields and server_version.
+# Prototype-only in-memory store; records are lost on restart.
+# Durable persistence must replace this before production use.
 server_inspection_store: dict[str, dict[str, object]] = {}
+server_inspection_store_lock = Lock()
 
 
 @app.get("/")
 def read_root() -> dict[str, str]:
-    return {
-        "status": "FieldAudit Backend is running with Idempotency & Revision Support"
-    }
+    return {"status": "FieldAudit Backend is running with revision-aware sync"}
 
 
 @app.post("/api/v1/inspections/sync", response_model=InspectionSyncResponse)
@@ -22,51 +22,68 @@ def sync_inspection(
     payload: InspectionSyncRequest,
 ) -> InspectionSyncResponse:
     """
-    Prototype sync endpoint.
+    Apply a versioned client update with retry-safe semantics.
 
-    Uses a client-provided identifier and a revision counter. This in-memory
-    implementation is not a production-ready idempotency or concurrency
-    protocol; durable persistence and proper optimistic concurrency remain
-    separate follow-up work.
+    Equal client versions are accepted only as exact replays. A different
+    payload for the same client version or an older client version conflicts.
+    A higher client version creates one new server revision.
     """
-    existing_record = server_inspection_store.get(payload.id)
+    with server_inspection_store_lock:
+        existing_record = server_inspection_store.get(payload.id)
 
-    if existing_record:
-        server_version = int(existing_record["server_version"])
+        if existing_record:
+            stored_local_version = int(existing_record["local_version"])
+            server_version = int(existing_record["server_version"])
 
-        # Conflict detection: an older local revision cannot overwrite a newer
-        # server revision. This is a prototype rule, not a full base-revision
-        # protocol.
-        if payload.local_version < server_version:
-            raise HTTPException(
-                status_code=409,
-                detail=(
-                    f"Conflict detected. Server revision is {server_version}, "
-                    f"but local version is {payload.local_version}."
-                ),
-            )
+            if payload.local_version < stored_local_version:
+                raise HTTPException(
+                    status_code=409,
+                    detail=(
+                        f"Stale local revision {payload.local_version}; "
+                        f"latest accepted local revision is {stored_local_version}."
+                    ),
+                )
 
-        # Preserve the existing prototype behavior pending the dedicated
-        # idempotency/concurrency fix.
-        existing_record["title"] = payload.title
-        existing_record["status"] = payload.status
-        existing_record["server_version"] = server_version + 1
-    else:
-        server_inspection_store[payload.id] = {
-            "id": payload.id,
-            "title": payload.title,
-            "status": payload.status,
-            "server_version": 1,
-        }
+            if payload.local_version == stored_local_version:
+                same_payload = (
+                    payload.title == existing_record["title"]
+                    and payload.status == existing_record["status"]
+                )
+                if not same_payload:
+                    raise HTTPException(
+                        status_code=409,
+                        detail=(
+                            "The local revision was already accepted with different "
+                            "content. Increment local_version before sending edits."
+                        ),
+                    )
+                saved = existing_record
+                message = "Duplicate sync acknowledged; no new server revision created."
+            else:
+                existing_record["title"] = payload.title
+                existing_record["status"] = payload.status
+                existing_record["local_version"] = payload.local_version
+                existing_record["server_version"] = server_version + 1
+                saved = existing_record
+                message = "New local revision synchronized."
+        else:
+            saved = {
+                "id": payload.id,
+                "title": payload.title,
+                "status": payload.status,
+                "local_version": payload.local_version,
+                "server_version": 1,
+            }
+            server_inspection_store[payload.id] = saved
+            message = "Initial inspection revision synchronized."
 
-    saved = server_inspection_store[payload.id]
-    return InspectionSyncResponse(
-        id=str(saved["id"]),
-        title=str(saved["title"]),
-        status="SYNCED",
-        server_version=int(saved["server_version"]),
-        message="Idempotent sync successful with revision tracking.",
-    )
+        return InspectionSyncResponse(
+            id=str(saved["id"]),
+            title=str(saved["title"]),
+            status="SYNCED",
+            server_version=int(saved["server_version"]),
+            message=message,
+        )
 
 
 @app.post("/api/v1/inspections/{inspection_id}/attachment")
