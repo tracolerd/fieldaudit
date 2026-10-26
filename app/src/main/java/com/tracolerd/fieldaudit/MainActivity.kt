@@ -78,6 +78,12 @@ fun InspectionScreen(viewModel: InspectionViewModel) {
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(text = "Status: ${inspection.status}", style = MaterialTheme.typography.bodyMedium)
                             Text(text = "UUID: ${inspection.id}", style = MaterialTheme.typography.bodySmall)
+                            if (inspection.status == "SYNC_FAILED") {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Button(onClick = { viewModel.retrySync(inspection) }) {
+                                    Text("Retry Sync")
+                                }
+                            }
                         }
                     }
                 }
