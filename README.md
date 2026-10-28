@@ -306,3 +306,7 @@ Focused issues and pull requests are welcome. For synchronization or data-model 
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+---
+
+<p align="center"><sub>Portfolio catalog · Project 10 of 22 · <a href="https://github.com/tracolerd">Nurul Faiyaz</a></sub></p>
